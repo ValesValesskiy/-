@@ -1,12 +1,15 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Button } from "react-native";
 import { Shift } from "@entities/shift";
 
 type Props = {
   item: Shift;
+  onOpenMap: (longitude: number, latitude: number) => void;
 };
 
-export const ShiftCard: React.FC<Props> = ({ item }) => {
+export const ShiftCard: React.FC<Props> = ({ item, onOpenMap }) => {
+  const { latitude, longitude } = item.coordinates;
+
   return (
     <>
       <Image source={{ uri: item.logo }} style={styles.logo} />
@@ -43,18 +46,27 @@ export const ShiftCard: React.FC<Props> = ({ item }) => {
           <Text style={styles.title}>Отзывы клиентов: </Text>
           {item.customerFeedbacksCount}
         </Text>
-        <Text>
+        <Text style={styles.last}>
           <Text style={styles.title}>Рейтинг: </Text>
           {item.customerRating ? item.customerRating + "/5" : "-"}
         </Text>
+        <Button
+          title="Открыть карты"
+          onPress={() => onOpenMap(longitude, latitude)}
+        />
       </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  content: { justifyContent: "flex-start", width: "100%" },
+  content: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    width: "100%",
+  },
   title: { fontWeight: "bold", fontSize: 14, paddingBottom: 8 },
+  last: { paddingBottom: 16 },
   padd: { paddingBottom: 8 },
   logo: {
     width: 180,

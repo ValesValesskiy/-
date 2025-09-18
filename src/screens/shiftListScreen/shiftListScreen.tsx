@@ -12,6 +12,9 @@ import { ShiftList } from "@features/shiftList";
 import { userGeolocationSingletone } from "@store/userGeolocation";
 import { geolocationPermissionSingletone } from "@store/geolocationPermission";
 import { runInAction } from "mobx";
+import { StackScreenProps } from "@react-navigation/stack";
+import { ScreenData } from "@shared/types";
+import { ScreenName } from "@shared/constants";
 
 const requestLocationAndFetch = async () => {
   await userGeolocationSingletone.fetch();
@@ -24,7 +27,9 @@ const requestLocationAndFetch = async () => {
   });
 };
 
-const ShiftListScreenComponent: React.FC = ({ navigation }) => {
+const ShiftListScreenComponent: React.FC<
+  StackScreenProps<ScreenData, ScreenName.Detail>
+> = ({ navigation }) => {
   const granted = geolocationPermissionSingletone.granted;
   const { fixLocation } = userGeolocationSingletone;
 
@@ -59,7 +64,9 @@ const ShiftListScreenComponent: React.FC = ({ navigation }) => {
   return (
     <ShiftList
       items={shiftListSingletone.shifts}
-      onNavigation={(item) => navigation.navigate("Detail", { shift: item })}
+      onNavigation={(item) =>
+        navigation.navigate(ScreenName.Detail, { shift: item })
+      }
       isLoading={shiftListSingletone.isLoading}
     />
   );
