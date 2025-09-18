@@ -1,45 +1,66 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import { StatusBar, StyleSheet, Text, useColorScheme } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { MainLayout } from "@layouts/mainLayout";
+import { createStackNavigator } from "@react-navigation/stack";
+import { ShiftListScreen } from "@screens/shiftListScreen";
+import { ShiftDetailScreen } from "@screens/shiftDetailScreen";
+import { userGeolocationSingletone } from "@store/userGeolocation";
+import { observer } from "mobx-react-lite";
+import { runInAction } from "mobx";
+import { ScreenName } from "@shared/constants";
+import { Switch } from "@shared/ui";
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
-
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const App: React.FC = () => {
+  const isDarkMode = useColorScheme() === "dark";
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle={!isDarkMode ? "light-content" : "dark-content"} />
       <AppContent />
     </SafeAreaProvider>
   );
-}
+};
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+const Stack = createStackNavigator();
+
+const _AppContent: React.FC = () => {
+  const isFixLocation = userGeolocationSingletone.fixLocation;
 
   return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
+    <MainLayout Stack={Stack}>
+      <Stack.Screen
+        name={ScreenName.ShiftList}
+        component={ShiftListScreen}
+        options={{
+          title: "Смены",
+          headerRight: () => (
+            <>
+              <Text style={styles.switchText}>Fix location</Text>
+              <Switch
+                onChange={() => {
+                  runInAction(() => {
+                    userGeolocationSingletone.fixLocation = !isFixLocation;
+                  });
+                }}
+                value={isFixLocation}
+              />
+            </>
+          ),
+        }}
       />
-    </View>
+      <Stack.Screen
+        name={ScreenName.Detail}
+        component={ShiftDetailScreen}
+        options={({ route }) => ({ title: route.params.shift.companyName })}
+      />
+    </MainLayout>
   );
-}
+};
+
+const AppContent = observer(_AppContent);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  switchText: { color: "white", paddingRight: 12 },
 });
 
 export default App;
