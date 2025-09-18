@@ -24,12 +24,12 @@ adb install -r app/build/outputs/apk/release/app-release.apk
 
 ## Вид собранного приложения
 
-<img src="./readme/1.jpg" width="100%" height="1000px" style="object-fit: contain; object-position: center;" />
+<span style="display: block; text-align: center;"><img src="./readme/1.jpg" width="50%" style="object-fit: contain; object-position: center;" /></span>
 
 <br>
 <br>
 
-<img src="./readme/2.jpg" width="100%" height="1000px" style="object-fit: contain; object-position: center;" />
+<span style="display: block; text-align: center;"><img src="./readme/2.jpg" width="50%" style="object-fit: contain; object-position: center;" /></span>
 
 <br>
 <br>
